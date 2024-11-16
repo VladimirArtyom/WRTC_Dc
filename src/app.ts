@@ -12,6 +12,8 @@ import AuthRoutes from './routes/authRoutes/auth_rotes.js';
 import RegisterUseCase from './use_case/register_use_case.js';
 import JwtService from './services/jwt_service.js';
 import PasswordService from './services/password_service.js';
+import LoginUseCase from './use_case/login_use_case.js';
+import { ErrorHandler } from './exceptions/express_error_handler.js';
 const port: number  = GlobalEnv.PORT;
 const expiration: string = GlobalEnv.EXPIRATION;
 const secret_key: string = GlobalEnv.SECRET_KEY;
@@ -19,7 +21,6 @@ const salt_round = GlobalEnv.SALT_ROUND;
 
 const authDAO = new AuthDAO(UserModel);
 const authRepository = new AuthRepository(authDAO);
-
 // Tout les services
 const jwtService = new JwtService(secret_key, expiration);
 const passwordService = new PasswordService(salt_round)
@@ -30,17 +31,23 @@ const registerUseCase = new RegisterUseCase(
     passwordService
 );
 
-const authController = new AuthController(registerUseCase);
+const loginUseCase = new LoginUseCase(
+    jwtService,
+    authRepository,
+    passwordService
+)
+
+const authController = new AuthController(registerUseCase, loginUseCase);
 const authRouter = new AuthRoutes(Router(), authController);
 
 const app = express();
 
 app.use(json());
-app.use(cors());
-
+//app.use(cors());
 app.use("/api", authRouter.get_router());
-const server = http.createServer(app);
 
+const server = http.createServer(app);
+app.use(ErrorHandler);
 try {
     mongoose.connect(GlobalEnv.MONGO_URI).then( () => {
         server.listen(port, () => {

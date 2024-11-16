@@ -16,6 +16,11 @@ class AuthDAO implements IAuthDAO{
         return user;
     }
 
+    async FindUserByUsername(username: String): Promise<Document> {
+        const user = await this.userModel.findOne({username: username});
+        return user;
+    }
+
     async GetUsers(): Promise<Document[]> {
         const user = await this.userModel.find();
         return user;
@@ -27,6 +32,15 @@ class AuthDAO implements IAuthDAO{
             mail: mail.toLowerCase(),
             password: encryptedPassword
         });
+
+        return user;
+    }
+
+    async VerifyUser(username: String, encryptedPassword: String): Promise<Document> {
+        const user = await this.userModel.findOne({
+            password: encryptedPassword,
+            username: username,
+        })
 
         return user;
     }

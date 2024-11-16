@@ -9,10 +9,12 @@ export default class AuthRoutes {
         this.authController = authController;  
         this.init_router = this.init_router.bind(this);
         this.get_router = this.get_router.bind(this);
+        
         this.init_router();
     }
     private init_router(){
-        this.router.post("/test", this.authController.RegisterNewUser);
+        this.router.post("/register", this.authController.RegisterNewUser);
+        this.router.post("/login", this.authController.LoginUser);
     }
 
     public get_router(): Router {
