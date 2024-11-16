@@ -3,5 +3,5 @@ type LoginUserBody = {
 }
 
 export {
-    LoginUserBody
+    LoginUserBody,
 }

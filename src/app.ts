@@ -1,7 +1,6 @@
 import express, { Router } from 'express';
 import mongoose from 'mongoose';
 import {json} from 'express';
-import cors from 'cors';
 import http from 'http';
 import GlobalEnv from './global/global_env.js';
 import AuthController from './controllers/auth/auth_controller.js';
@@ -9,11 +8,12 @@ import AuthRepository from './repository/auth_repository.js';
 import AuthDAO from './DAO/AuthDAO.js';
 import UserModel from './models/user.js';
 import AuthRoutes from './routes/authRoutes/auth_rotes.js';
-import RegisterUseCase from './use_case/register_use_case.js';
+import RegisterUseCase from './use_case/auth/register_use_case.js';
 import JwtService from './services/jwt_service.js';
 import PasswordService from './services/password_service.js';
-import LoginUseCase from './use_case/login_use_case.js';
+import LoginUseCase from './use_case/auth/login_use_case.js';
 import { ErrorHandler } from './exceptions/express_error_handler.js';
+import AuthMiddleware from './middlewares/auth_middle.js';
 const port: number  = GlobalEnv.PORT;
 const expiration: string = GlobalEnv.EXPIRATION;
 const secret_key: string = GlobalEnv.SECRET_KEY;
@@ -38,16 +38,17 @@ const loginUseCase = new LoginUseCase(
 )
 
 const authController = new AuthController(registerUseCase, loginUseCase);
-const authRouter = new AuthRoutes(Router(), authController);
+const authMiddleware = new AuthMiddleware(jwtService);
+const authRouter = new AuthRoutes(Router(), authController, authMiddleware);
 
 const app = express();
 
 app.use(json());
 //app.use(cors());
 app.use("/api", authRouter.get_router());
+app.use(ErrorHandler);
 
 const server = http.createServer(app);
-app.use(ErrorHandler);
 try {
     mongoose.connect(GlobalEnv.MONGO_URI).then( () => {
         server.listen(port, () => {

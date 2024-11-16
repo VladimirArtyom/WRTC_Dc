@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IUser } from "../interfaces/interfaces";
+import { IUser } from "../interfaces/interfaces.js";
 
 const UserSchema = new mongoose.Schema({
     mail: {
@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String
     },
-    friends: mongoose.Types.ObjectId,
+    friends: [{type: mongoose.Types.ObjectId, ref: "User"}],
     
 });
 

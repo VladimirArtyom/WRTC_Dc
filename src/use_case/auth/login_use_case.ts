@@ -1,8 +1,8 @@
-import { IUser } from "../interfaces/interfaces.js";
-import AuthRepository from "../repository/auth_repository.js";
-import JwtService from "../services/jwt_service.js";
-import PasswordService from "../services/password_service.js";
-import { BadRequestError } from '../exceptions/exceptions.js';
+import { IUser } from "../../interfaces/interfaces.js";
+import AuthRepository from "../../repository/auth_repository.js";
+import JwtService from "../../services/jwt_service.js";
+import PasswordService from "../../services/password_service.js";
+import { BadRequestError } from '../../exceptions/exceptions.js';
 
 class LoginUseCase {
     private jwtService: JwtService;

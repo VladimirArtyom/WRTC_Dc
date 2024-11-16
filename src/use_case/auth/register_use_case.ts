@@ -1,6 +1,6 @@
-import AuthRepository from '../repository/auth_repository';
-import JwtService from "../services/jwt_service";
-import PasswordService from '../services/password_service';
+import AuthRepository from '../../repository/auth_repository';
+import JwtService from "../../services/jwt_service";
+import PasswordService from '../../services/password_service';
 
 class RegisterUseCase {
     private jwtService: JwtService;
@@ -18,8 +18,8 @@ class RegisterUseCase {
     async Execute(username: string, email: string, password: string): Promise<string> {
         const user = await this.authRepository.FindByEmail(email);
         if (!user) {
+            console.log(user);
             const hashedPassword = await this.passwordService.HashPassword(password);
-
             const newUser = await this.authRepository.SaveUser(username, email, hashedPassword);
 
             // Create Jwt token

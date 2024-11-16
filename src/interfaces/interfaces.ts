@@ -1,9 +1,16 @@
 import { Document } from "mongoose";
+import { Request } from "express";
 
 interface IUser extends Document {
     mail: String;
     username: String;
     password: String;
+}
+interface IAuthenticatedUserBody extends Request {
+    user: {
+        userId: string,
+        userMail: string
+    }
 }
 
 interface IAuthDAO {
@@ -17,5 +24,6 @@ interface IAuthDAO {
 
 export {
     IUser,
-    IAuthDAO
+    IAuthDAO,
+    IAuthenticatedUserBody
 }

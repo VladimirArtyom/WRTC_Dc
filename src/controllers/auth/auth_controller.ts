@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import RegisterUseCase from "../../use_case/register_use_case";
-import LoginUseCase from '../../use_case/login_use_case';
+import RegisterUseCase from "../../use_case/auth/register_use_case.js";
+import LoginUseCase from '../../use_case/auth/login_use_case.js';
 class AuthController {
     //private authService: AuthServices;
     private registerUserCase: RegisterUseCase;
